@@ -18,7 +18,7 @@ public class BaseObject {
 		drawX = 0;
 		drawY = 0;
 		drawPriority = 0;
-		loadImage(path);
+		image = loadImage(path);
 	}
 	
 	/*
@@ -56,9 +56,9 @@ public class BaseObject {
 	 * Loads the image and returns the JLabel
 	 * (Whatever that is)
 	 */
-	public void loadImage(String imagePath) throws IOException {
+	public BufferedImage loadImage(String imagePath) throws IOException {
 		File file = new File(imagePath);
-		image = ImageIO.read(file);
+		return ImageIO.read(file);
 	}
 	
 	public BufferedImage getImage() {
@@ -73,15 +73,21 @@ public class BaseObject {
 		return image.getHeight();
 	}
 	
-	public int getDisplayX() {
+	public int getLeftX() {
 		return drawX - (int)(image.getWidth() / 2);
 	}
 	
-	public int getDisplayY() {
+	public int getTopY() {
 		return drawY - (int)(image.getHeight() / 2);
 	}
 	
+	public int getRightX() {
+		return drawX + (int)(image.getWidth() / 2);
+	}
 	
+	public int getBottomY() {
+		return drawY + (int)(image.getHeight() / 2);
+	}
 	
 	public int getX() {
 		return drawX;
@@ -90,4 +96,7 @@ public class BaseObject {
 	public int getY() {
 		return drawY;
 	}
+
+	public void resetHovered() {} // DOES NOTHING ONLY USED IN BUTTONS
+	public void setHovered() {} // ALSO DOES NOTHING
 }
