@@ -13,12 +13,12 @@ public class MainMenu extends State{
 		super();
 		
 		// Load in all objects needed
-		objects.add(new BaseObject("Images/titlescreen.png").x(400).y(200));
-		objects.add(new Button("Images/startbutton.png").x(400).y(300));
+		objects.put("Title Image", new BaseObject("Images/titlescreen.png").x(400).y(200));
+		objects.put("Start Button", new Button("Images/startbutton.png").x(400).y(300));
 	}
 
 	@Override
-	public void getInput(int code) {
+	public void useInput(int code) {
 		switch(code) {
 			case KeyEvent.VK_UP:
 				break;

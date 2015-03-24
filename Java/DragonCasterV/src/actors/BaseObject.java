@@ -1,24 +1,15 @@
 package actors;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-public class BaseObject {
+public class BaseObject extends LoadingImage{
 
 	// DrawX and DrawY are center points
-	int drawX, drawY;
-	int drawPriority;
-	BufferedImage image;
+	int x, y;
 
 	// Default draw priority
-	public BaseObject(String path) throws IOException {
-		drawX = 0;
-		drawY = 0;
-		drawPriority = 0;
-		image = loadImage(path);
+	public BaseObject(String path) {
+		super(path);
+		x = 0;
+		y = 0;
 	}
 	
 	/*
@@ -38,65 +29,36 @@ public class BaseObject {
 	 * 		Rather than the default 0's for all of them.
 	 */
 	public BaseObject x(int x) {
-		drawX = x;
+		this.x = x;
 		return this;
 	}
 	
 	public BaseObject y(int y) {
-		drawY = y;
+		this.y = y;
 		return this;
 	}
 	
-	public void priority(int priorityVal) {
-		drawPriority = priorityVal;
-	}
-
-	
-	/*
-	 * Loads the image and returns the JLabel
-	 * (Whatever that is)
-	 */
-	public BufferedImage loadImage(String imagePath) throws IOException {
-		File file = new File(imagePath);
-		return ImageIO.read(file);
+	public int getImageLeftX() {
+		return x - (int)(image.getWidth() / 2);
 	}
 	
-	public BufferedImage getImage() {
-		return image;
+	public int getImageTopY() {
+		return y - (int)(image.getHeight() / 2);
 	}
 	
-	public int width() {
-		return image.getWidth();
+	public int getImageRightX() {
+		return x + (int)(image.getWidth() / 2);
 	}
 	
-	public int height() {
-		return image.getHeight();
-	}
-	
-	public int getLeftX() {
-		return drawX - (int)(image.getWidth() / 2);
-	}
-	
-	public int getTopY() {
-		return drawY - (int)(image.getHeight() / 2);
-	}
-	
-	public int getRightX() {
-		return drawX + (int)(image.getWidth() / 2);
-	}
-	
-	public int getBottomY() {
-		return drawY + (int)(image.getHeight() / 2);
+	public int getImageBottomY() {
+		return y + (int)(image.getHeight() / 2);
 	}
 	
 	public int getX() {
-		return drawX;
+		return x;
 	}
 	
 	public int getY() {
-		return drawY;
+		return y;
 	}
-
-	public void resetHovered() {} // DOES NOTHING ONLY USED IN BUTTONS
-	public void setHovered() {} // ALSO DOES NOTHING
 }

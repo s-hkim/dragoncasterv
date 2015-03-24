@@ -6,6 +6,7 @@ import java.io.IOException;
 public class Button extends BaseObject{
 
 	private boolean isHovered;
+	private boolean isPressed;
 	private BufferedImage hoveredImage;
 	
 	public Button(String path) throws IOException {
@@ -41,5 +42,17 @@ public class Button extends BaseObject{
 			return hoveredImage;	
 		else
 			return super.getImage();
+	}
+	
+	public void resetPressed() {
+		isPressed = false;
+	}
+
+	public void setPressed() {
+		isPressed = true;
+	}
+	
+	public boolean getPressed() {
+		return isPressed;
 	}
 }

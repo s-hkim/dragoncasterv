@@ -10,7 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -32,12 +32,12 @@ public class StateManager extends JPanel{
 	 * responsible for popping itself off of the
 	 * state. Not entirely sure how to do that though.
 	 */
-	Deque<State> stack;
+	Deque<State> stateStack;
 
 	public StateManager() throws IOException {
 		// Initializes to the main menu
-		stack = new ArrayDeque<State>();
-		stack.push(new MainMenu());
+		stateStack = new ArrayDeque<State>();
+		stateStack.push(new MainMenu());
 
 		addKeyListener((KeyListener) new myKeyListener());
 		addMouseListener((MouseListener) new myMouseListener());
@@ -73,28 +73,62 @@ public class StateManager extends JPanel{
 	}
 	
 	public void checkHovered(MouseEvent e) {
-		List<BaseObject> tempList = stack.getFirst().getObjects(); 
+		State tempState = stateStack.getFirst();
+		Map<String, BaseObject> tempList = tempState.getObjects();
 		
 		int l, r, t, b;
 		
 		int x = e.getX();
 		int y = e.getY();
 		
-		for(int i = 0; i < tempList.size(); i++) {
-			BaseObject tempObj = tempList.get(i);
-			l = tempObj.getLeftX();
-			r = tempObj.getRightX();
-			t = tempObj.getTopY();
-			b = tempObj.getBottomY();
+		for(BaseObject tempObj : tempList.values()) {
+			l = tempObj.getImageLeftX();
+			r = tempObj.getImageRightX();
+			t = tempObj.getImageTopY();
+			b = tempObj.getImageBottomY();
 			
 			if(tempObj instanceof Button) {
-				tempObj.resetHovered();
+				// I think I have to cast it to button
+				// type. In the if statement above though,
+				// we make sure it is a button type so there
+				// shouldn't be problems.
+				((Button) tempObj).resetHovered();
 				if(x > l && x < r && y > t && y < b) {
-					tempObj.setHovered();
+					((Button) tempObj).setHovered();
 					break;
 				}
 			}
 		}
+	}
+	
+	public void checkClicked(MouseEvent e) {
+		State tempState = stateStack.getFirst();
+		Map<String, BaseObject> tempList = tempState.getObjects();
+		
+		int l, r, t, b;
+		
+		int x = e.getX();
+		int y = e.getY();
+		
+		for(BaseObject tempObj : tempList.values()) {
+			l = tempObj.getImageLeftX();
+			r = tempObj.getImageRightX();
+			t = tempObj.getImageTopY();
+			b = tempObj.getImageBottomY();
+			
+			if(tempObj instanceof Button) {
+				// I think I have to cast it to button
+				// type. In the if statement above though,
+				// we make sure it is a button type so there
+				// shouldn't be problems.
+				((Button) tempObj).getPressed();
+				if(x > l && x < r && y > t && y < b) {
+					((Button) tempObj).setPressed();
+					break;
+				}
+			}
+		}
+		
 	}
 	
 	/*
@@ -110,7 +144,7 @@ public class StateManager extends JPanel{
 	public class myKeyListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			stack.getFirst().getInput(e.getKeyCode());
+			stateStack.getFirst().useInput(e.getKeyCode());
 		}
 		@Override
 		public void keyReleased(KeyEvent e) {}
@@ -131,7 +165,9 @@ public class StateManager extends JPanel{
 	// Internal class for overriding mouse listener
 	public class myMouseListener implements MouseListener {
 		@Override
-		public void mouseClicked(MouseEvent e) {}
+		public void mouseClicked(MouseEvent e) {
+			checkClicked(e);
+		}
 		@Override
 		public void mouseEntered(MouseEvent e) {}
 		@Override
@@ -149,15 +185,13 @@ public class StateManager extends JPanel{
 	public void paint(Graphics g) {
 		// Takes all of the objects to be drawn (SHOULD be sorted
 		// by draw priority) and displays based on their top left corner
-		List<BaseObject> tempList = stack.getFirst().getObjects();
-		for(int i = 0; i < tempList.size(); i++) {
-			BaseObject tempObj = tempList.get(i);
-			g.drawImage(tempObj.getImage(), tempObj.getLeftX(), tempObj.getTopY(), this);
+		Map<String, BaseObject> tempList = stateStack.getFirst().getObjects();
+		for(BaseObject tempObj : tempList.values()) {
+			g.drawImage(tempObj.getImage(), tempObj.getImageLeftX(), tempObj.getImageTopY(), this);
 			if(DEBUGGING) {
 				g.setColor(Color.RED);
-				g.drawRect(tempObj.getLeftX(), tempObj.getTopY(), tempObj.width(), tempObj.height());
+				g.drawRect(tempObj.getImageLeftX(), tempObj.getImageTopY(), tempObj.imageWidth(), tempObj.imageHeight());
 			}
-			
 		}
 	}
 	

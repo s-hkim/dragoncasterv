@@ -1,7 +1,7 @@
 package states;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -10,20 +10,19 @@ import actors.BaseObject;
 @SuppressWarnings("serial")
 public abstract class State extends JPanel{
 
-	List<BaseObject> objects;
+	Map<String, BaseObject> objects;
 	
 	// Constructor
 	public State() {
-		objects = new ArrayList<BaseObject>();
+		objects = new HashMap<String, BaseObject>();
 	}
-	
-	// To be overwritten
-	public abstract void getInput(int code);
+
+	public abstract void useInput(int input);
 	
 	// To be overwritten
 	public abstract void update();
 
-	public List<BaseObject> getObjects() {
+	public Map<String, BaseObject> getObjects() {
 		return objects;
 	}
 }
